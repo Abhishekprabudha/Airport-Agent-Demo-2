@@ -60,6 +60,14 @@ http://localhost:8000
 
 Click **Start narrated demo**. The browser version uses built-in SpeechSynthesis for narration.
 
+## Run diagnostics for MP4 workflow
+
+```bash
+python3 scripts/diagnostics.py
+```
+
+This checks both **local** and **GitHub Actions** readiness. It validates workflow files, scene/video integrity, and reports whether local tools are installed. It also verifies the render workflow installs `ffmpeg`, fonts, dependencies, and runs the render script, so you can tell whether any local blocker also blocks GitHub render.
+
 ## Generate narration MP3
 
 This uses Microsoft Edge TTS through `edge-tts`.
