@@ -65,6 +65,15 @@ def main() -> int:
     ffmpeg = shutil.which("ffmpeg")
     local_ready &= check("local ffmpeg available on PATH", ffmpeg is not None, ffmpeg or "not found")
 
+    xvfb = shutil.which("xvfb-run")
+    local_ready &= check("local xvfb-run available on PATH", xvfb is not None, xvfb or "not found")
+
+    try:
+        importlib.import_module("playwright")
+        local_ready &= check("local python dependency playwright import", True)
+    except Exception as exc:  # noqa: BLE001
+        local_ready &= check("local python dependency playwright import", False, str(exc))
+
     fonts_ok = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf").exists()
     local_ready &= check("local render font available", fonts_ok)
 
@@ -73,7 +82,9 @@ def main() -> int:
         wf_text = RENDER_WF.read_text(encoding="utf-8")
         github_ready &= check("workflow installs ffmpeg", "apt-get install -y ffmpeg" in wf_text)
         github_ready &= check("workflow installs DejaVu fonts", "fonts-dejavu-core" in wf_text)
+        github_ready &= check("workflow installs xvfb", "xvfb" in wf_text)
         github_ready &= check("workflow installs Python requirements", "pip install -r requirements.txt" in wf_text)
+        github_ready &= check("workflow installs Playwright Chromium", "playwright install chromium" in wf_text)
         github_ready &= check("workflow runs render script", "python3 scripts/render_mp4.py" in wf_text)
 
     local_ready &= common_ok
