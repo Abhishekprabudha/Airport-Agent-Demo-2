@@ -1,0 +1,112 @@
+[
+  {
+    "id": "opening",
+    "start": 0,
+    "end": 18,
+    "video": "airport-command-center.mp4",
+    "section": "AIonOS x SMART Aviation AI",
+    "headline": "Unified Airport Command Centre",
+    "caption": "AIonOS opens a live airport intelligence layer across landside, terminal, airside and building systems — powered by SMART connectivity.",
+    "agents": ["Unified AI Ops Centre", "Airport Digital Twin", "SMART Connectivity Layer"],
+    "kpis": {"Operational Visibility": "Live", "Risk Detection": "Predictive", "Command Layer": "Unified"}
+  },
+  {
+    "id": "landside-city",
+    "start": 18,
+    "end": 38,
+    "video": "city-side-airport.mp4",
+    "section": "Landside AI",
+    "headline": "Arrival Surge Predicted Before Congestion Forms",
+    "caption": "The Passenger Flow Agent detects an inbound surge while car park and transport agents prepare capacity before the queues become visible.",
+    "agents": ["Passenger Flow Agent", "Smart Car Park Ops Agent", "Ground Transport Dispatch Agent"],
+    "kpis": {"Queue Risk": "High → Controlled", "Pickup SLA": "72% → 94%", "Car Park Load": "91% → Balanced"}
+  },
+  {
+    "id": "landside-crowd",
+    "start": 38,
+    "end": 56,
+    "video": "crowd-at-airport.mp4",
+    "section": "Passenger Intelligence",
+    "headline": "Crowd Heatmaps Trigger Staff Repositioning",
+    "caption": "AIonOS converts anonymous mobility signals into crowd heatmaps and automatically recommends staffing, queue routing and wayfinding changes.",
+    "agents": ["Passenger Location Intelligence", "Queue Prediction Agent", "Wayfinding Recommendation Agent"],
+    "kpis": {"Crowd Incident Risk": "-40%", "Wait Time": "-35%", "Pax Satisfaction": "+22 pts"}
+  },
+  {
+    "id": "terminal-core",
+    "start": 56,
+    "end": 78,
+    "video": "terminal-interiors.mp4",
+    "section": "Terminal AI",
+    "headline": "Terminal Operations Become Self-Aware",
+    "caption": "Inside the terminal, every gate, trolley, kiosk, wheelchair, retail zone and passenger flow becomes part of one operating model.",
+    "agents": ["Terminal Asset Tracking Agent", "Wheelchair Dispatch Agent", "Retail & F&B Intelligence Agent", "Passenger Dwell Analytics Agent"],
+    "kpis": {"Asset Visibility": "100%", "Retail Revenue": "+18%", "Mobility SLA": "Protected"}
+  },
+  {
+    "id": "baggage",
+    "start": 78,
+    "end": 98,
+    "video": "busy-baggage-belt.mp4",
+    "section": "Baggage Intelligence",
+    "headline": "Baggage Mismatch Risk Detected Early",
+    "caption": "The Baggage Intelligence Agent tracks bag movement, flags mismatch risk and alerts teams before boarding cut-off.",
+    "agents": ["Baggage Intelligence Agent", "RFID Tracking Agent", "Carousel Allocation Agent"],
+    "kpis": {"Mishandled Bags": "-42%", "Claim Time": "-8 min", "Mismatch Risk": "7 bags → 1 bag"}
+  },
+  {
+    "id": "boarding",
+    "start": 98,
+    "end": 118,
+    "video": "crowd-boarding-gate.mp4",
+    "section": "Gate & Boarding AI",
+    "headline": "Boarding Sequence Re-Optimised in Real Time",
+    "caption": "The Gate and Boarding Ops Agent monitors passenger density, protects jet bridge flow and resequences boarding to recover departure punctuality.",
+    "agents": ["Gate & Boarding Ops Agent", "Jet Bridge Congestion Agent", "PAX Count Agent"],
+    "kpis": {"Boarding Delay": "18 min → 4 min", "Gate Ops Time": "-15 min", "On-time Departure": "+12 pts"}
+  },
+  {
+    "id": "airside",
+    "start": 118,
+    "end": 142,
+    "video": "aircraft-parked.mp4",
+    "section": "Airside AI",
+    "headline": "Turnaround Risk Repaired Before It Cascades",
+    "caption": "Airside agents track GSE, monitor turnaround tasks, detect zone violations and assign the nearest crew or equipment to protect departure time.",
+    "agents": ["GSE Asset Tracking Agent", "Aircraft Turnaround Agent", "Airside Geofencing Agent", "Maintenance Crew Response Agent"],
+    "kpis": {"Turnaround Delay": "22 min → 6 min", "GSE Utilisation": "61% → 84%", "Dispatch Time": "-40%"}
+  },
+  {
+    "id": "runway-safety",
+    "start": 142,
+    "end": 158,
+    "video": "plane-landing.mp4",
+    "section": "Runway Safety AI",
+    "headline": "FOD Alert Dispatched in Under 30 Seconds",
+    "caption": "The FOD and Runway Safety Agent uses AI camera feeds to detect runway debris and trigger the nearest response workflow instantly.",
+    "agents": ["FOD & Runway Safety Agent", "AI Camera Detection Agent", "Runway Response Workflow Agent"],
+    "kpis": {"Detection Rate": "+95%", "Response Time": "7 min → 45 sec", "Safety Status": "Controlled"}
+  },
+  {
+    "id": "bms",
+    "start": 158,
+    "end": 178,
+    "video": "terminal-interiors.mp4",
+    "section": "AI Building Management System",
+    "headline": "The Airport Building Becomes Self-Optimising",
+    "caption": "AI HVAC, lighting, fire safety, energy, ESG and vertical transport agents coordinate through one AI-BMS operations centre.",
+    "agents": ["AI HVAC & Climate Agent", "Intelligent Lighting Agent", "Fire & Safety AI Agent", "Energy & ESG Agent", "Vertical Transport Agent"],
+    "kpis": {"Energy Saving": "25–35%", "MTTR": "-50%", "Incident Response": "<30 sec"}
+  },
+  {
+    "id": "close",
+    "start": 178,
+    "end": 180,
+    "video": "aircraft-takeoff.mp4",
+    "section": "Executive Outcome",
+    "headline": "One AI-Native Airport Operating System",
+    "caption": "SMART provides the trusted connectivity fabric. AIonOS provides the intelligence layer. Together they convert airport complexity into coordinated action.",
+    "agents": ["Unified AI Ops Centre", "SMART + AIonOS Aviation AI Portfolio"],
+    "kpis": {"Airport Ops": "Connected", "Risks": "Predicted", "Outcomes": "Optimised"}
+  }
+]
