@@ -2,6 +2,11 @@ name: Render narrated airport demo MP4
 
 on:
   workflow_dispatch:
+    inputs:
+      narration_run_id:
+        description: 'Run ID from "Generate narration MP3" workflow'
+        required: true
+        type: string
 
 jobs:
   render:
@@ -23,8 +28,16 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Generate narration MP3
-        run: python3 scripts/generate_narration.py
+      - name: Download narration MP3 artifact
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: generate-narration-mp3.yml
+          run_id: ${{ inputs.narration_run_id }}
+          name: airport-agent-narration-mp3
+          path: assets/audio
+
+      - name: Verify narration asset exists
+        run: test -f assets/audio/airport-agent-narration.mp3
 
       - name: Render narrated MP4
         run: python3 scripts/render_mp4.py
