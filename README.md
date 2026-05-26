@@ -97,7 +97,7 @@ Output:
 dist/airport-agent-demo-narrated.mp4
 ```
 
-If the narration MP3 does not exist, the script renders a silent captioned MP4. Once the narration MP3 exists, it will be added automatically.
+The render script now generates the narration MP3 first (via `scripts/generate_narration.py`) and aborts if narration cannot be produced, preventing silent MP4 outputs.
 
 ## GitHub upload steps
 

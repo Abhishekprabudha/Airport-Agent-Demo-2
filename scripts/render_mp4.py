@@ -1,8 +1,8 @@
 import json
-import os
 import shlex
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -60,9 +60,17 @@ def build_clip(scene, idx):
     return dst
 
 
+
+def ensure_narration_audio():
+    run([sys.executable, str(ROOT / "scripts" / "generate_narration.py")])
+    if not AUDIO.exists():
+        raise SystemExit("Narration audio was not generated. Aborting MP4 render to avoid silent output.")
+
+
 def main():
     if shutil.which("ffmpeg") is None:
         raise SystemExit("ffmpeg not found. Install ffmpeg first.")
+    ensure_narration_audio()
     OUT_DIR.mkdir(exist_ok=True)
     if TMP.exists(): shutil.rmtree(TMP)
     TMP.mkdir()
@@ -71,10 +79,7 @@ def main():
     concat.write_text("\n".join([f"file '{p.as_posix()}'" for p in clips]), encoding="utf-8")
     silent = TMP / "silent.mp4"
     run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat), "-c", "copy", str(silent)])
-    if AUDIO.exists():
-        run(["ffmpeg", "-y", "-i", str(silent), "-i", str(AUDIO), "-c:v", "copy", "-c:a", "aac", "-shortest", str(OUT)])
-    else:
-        run(["ffmpeg", "-y", "-i", str(silent), "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100", "-c:v", "copy", "-c:a", "aac", "-shortest", str(OUT)])
+    run(["ffmpeg", "-y", "-i", str(silent), "-i", str(AUDIO), "-c:v", "copy", "-c:a", "aac", "-shortest", str(OUT)])
     print(f"Rendered {OUT}")
 
 if __name__ == "__main__":
