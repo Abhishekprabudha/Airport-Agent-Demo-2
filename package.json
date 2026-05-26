@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "python3 -m http.server 8000",
     "narration": "python3 scripts/generate_narration.py",
-    "render": "python3 scripts/render_mp4.py"
+    "render": "python3 scripts/render_mp4.py",
+    "diagnostics": "python3 scripts/diagnostics.py"
   }
 }
