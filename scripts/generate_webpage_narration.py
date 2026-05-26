@@ -1,5 +1,6 @@
 import asyncio
 import json
+import shutil
 from pathlib import Path
 
 import edge_tts
@@ -47,12 +48,22 @@ async def main() -> None:
     OUT_TEXT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUT_TEXT_PATH.write_text(narration_text + "\n", encoding="utf-8")
 
+    backup_path = OUT_MP3_PATH.with_suffix(OUT_MP3_PATH.suffix + '.bak')
+    had_existing_mp3 = OUT_MP3_PATH.exists() and OUT_MP3_PATH.stat().st_size > 0
+    if had_existing_mp3:
+        shutil.copy2(OUT_MP3_PATH, backup_path)
+
     try:
         await synthesize(narration_text)
+        if backup_path.exists():
+            backup_path.unlink()
         print(f"Webpage narration text written to {OUT_TEXT_PATH}")
         print(f"Webpage narration MP3 written to {OUT_MP3_PATH} using voice {VOICE}")
     except Exception as exc:  # noqa: BLE001
-        if OUT_MP3_PATH.exists():
+        # Restore the previously generated MP3 on transient network/TTS failures.
+        if backup_path.exists():
+            shutil.move(str(backup_path), str(OUT_MP3_PATH))
+        elif OUT_MP3_PATH.exists():
             OUT_MP3_PATH.unlink()
         raise RuntimeError("Webpage narration generation failed.") from exc
 
