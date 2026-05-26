@@ -5,6 +5,11 @@ let isPlaying = false;
 let voiceOn = true;
 const totalDuration = 180;
 const videoBase = 'assets/videos/';
+const narrationAudioPath = 'assets/audio/airport-agent-narration.mp3';
+const narrationAudio = new Audio(narrationAudioPath);
+narrationAudio.preload = 'auto';
+narrationAudio.crossOrigin = 'anonymous';
+
 const els = {
   video: document.getElementById('bgVideo'),
   section: document.getElementById('section'),
@@ -31,6 +36,17 @@ function speak(text) {
   if (preferred) u.voice = preferred;
   window.speechSynthesis.speak(u);
 }
+
+function playNarrationTrack() {
+  narrationAudio.currentTime = 0;
+  narrationAudio.muted = !voiceOn;
+  narrationAudio.play().catch(() => {
+    // Fallback to in-browser voice if MP3 is unavailable or blocked.
+    const scene = currentScene(0);
+    if (scene) speak(`${scene.headline}. ${scene.caption}`);
+  });
+}
+
 let lastSceneId = null;
 function renderScene(scene, elapsed) {
   if (!scene) return;
@@ -42,7 +58,6 @@ function renderScene(scene, elapsed) {
     els.caption.textContent = scene.caption;
     els.agents.innerHTML = scene.agents.map(a => `<div class="agent">${a}</div>`).join('');
     els.kpis.innerHTML = Object.entries(scene.kpis).map(([k,v]) => `<div class="kpi"><div class="label">${k}</div><div class="value">${v}</div></div>`).join('');
-    speak(`${scene.headline}. ${scene.caption}`);
     lastSceneId = scene.id;
   }
   els.clock.textContent = fmt(elapsed);
@@ -52,12 +67,42 @@ function tick(now) {
   if (!startTime) startTime = now;
   const elapsed = Math.min(totalDuration, (now - startTime) / 1000);
   renderScene(currentScene(elapsed), elapsed);
-  if (elapsed < totalDuration && isPlaying) raf = requestAnimationFrame(tick); else isPlaying = false;
+  if (elapsed < totalDuration && isPlaying) {
+    raf = requestAnimationFrame(tick);
+  } else {
+    isPlaying = false;
+    narrationAudio.pause();
+  }
 }
-function startDemo() { if (isPlaying) return; isPlaying = true; startTime = null; lastSceneId = null; els.playBtn.textContent = '▶ Playing'; raf = requestAnimationFrame(tick); }
-function resetDemo() { cancelAnimationFrame(raf); window.speechSynthesis?.cancel(); isPlaying = false; startTime = null; lastSceneId = null; renderScene(scenes[0], 0); els.progress.style.width = '0%'; els.clock.textContent = '00:00'; els.playBtn.textContent = '▶ Start narrated demo'; }
+function startDemo() {
+  if (isPlaying) return;
+  isPlaying = true;
+  startTime = null;
+  lastSceneId = null;
+  els.playBtn.textContent = '▶ Playing';
+  playNarrationTrack();
+  raf = requestAnimationFrame(tick);
+}
+function resetDemo() {
+  cancelAnimationFrame(raf);
+  window.speechSynthesis?.cancel();
+  narrationAudio.pause();
+  narrationAudio.currentTime = 0;
+  isPlaying = false;
+  startTime = null;
+  lastSceneId = null;
+  renderScene(scenes[0], 0);
+  els.progress.style.width = '0%';
+  els.clock.textContent = '00:00';
+  els.playBtn.textContent = '▶ Start narrated demo';
+}
 
 fetch('data/scenes.json').then(r => r.json()).then(json => { scenes = json; renderScene(scenes[0], 0); });
 els.playBtn.addEventListener('click', startDemo);
 els.resetBtn.addEventListener('click', resetDemo);
-els.muteBtn.addEventListener('click', () => { voiceOn = !voiceOn; els.muteBtn.textContent = `Voice: ${voiceOn ? 'On' : 'Off'}`; if (!voiceOn) window.speechSynthesis?.cancel(); });
+els.muteBtn.addEventListener('click', () => {
+  voiceOn = !voiceOn;
+  els.muteBtn.textContent = `Voice: ${voiceOn ? 'On' : 'Off'}`;
+  narrationAudio.muted = !voiceOn;
+  if (!voiceOn) window.speechSynthesis?.cancel();
+});
