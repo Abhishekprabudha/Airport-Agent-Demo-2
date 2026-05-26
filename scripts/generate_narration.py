@@ -17,6 +17,8 @@ async def synthesize(text: str) -> None:
         try:
             communicate = edge_tts.Communicate(text, VOICE, rate=RATE)
             await communicate.save(str(OUT_PATH))
+            if not OUT_PATH.exists() or OUT_PATH.stat().st_size == 0:
+                raise RuntimeError("edge_tts completed without producing a non-empty MP3 file")
             return
         except Exception as exc:  # noqa: BLE001 - network / provider failures should not fail render
             last_error = exc
@@ -33,11 +35,10 @@ async def main() -> None:
     try:
         await synthesize(text)
         print(f"Narration written to {OUT_PATH}")
-    except Exception as exc:  # noqa: BLE001 - this is an optional artifact
+    except Exception as exc:  # noqa: BLE001 - fail fast so CI reports generation problems clearly
         if OUT_PATH.exists():
             OUT_PATH.unlink()
-        print("Warning: Narration generation failed; continuing without voiceover.")
-        print(f"Reason: {exc}")
+        raise RuntimeError("Narration generation failed.") from exc
 
 
 if __name__ == "__main__":
