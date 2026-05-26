@@ -6,7 +6,7 @@ import edge_tts
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_PATH = ROOT / "assets" / "audio" / "narration.txt"
 OUT_PATH = ROOT / "assets" / "audio" / "airport-agent-narration.mp3"
-VOICE = "en-US-GuyNeural"
+VOICE = "en-GB-RyanNeural"
 RATE = "-2%"
 MAX_ATTEMPTS = 3
 
@@ -34,7 +34,7 @@ async def main() -> None:
 
     try:
         await synthesize(text)
-        print(f"Narration written to {OUT_PATH}")
+        print(f"Narration written to {OUT_PATH} using voice {VOICE}")
     except Exception as exc:  # noqa: BLE001 - fail fast so CI reports generation problems clearly
         if OUT_PATH.exists():
             OUT_PATH.unlink()
