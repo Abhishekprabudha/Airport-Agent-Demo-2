@@ -62,6 +62,9 @@ def build_clip(scene, idx):
 
 
 def ensure_narration_audio():
+    if AUDIO.exists():
+        print(f"Using existing narration audio at {AUDIO}")
+        return
     run([sys.executable, str(ROOT / "scripts" / "generate_narration.py")])
     if not AUDIO.exists():
         raise SystemExit("Narration audio was not generated. Aborting MP4 render to avoid silent output.")
