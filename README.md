@@ -58,7 +58,11 @@ Open:
 http://localhost:8000
 ```
 
-Click **Start narrated demo**. The browser version uses built-in SpeechSynthesis for narration.
+Click **Start narrated demo**. The webpage plays `assets/audio/airport-agent-narration.mp3`.
+
+When `data/scenes.json` changes on `main`, the **Generate webpage narration MP3** workflow regenerates narration and commits:
+- `assets/audio/narration-webpage.txt`
+- `assets/audio/airport-agent-narration.mp3`
 
 ## Run diagnostics for MP4 workflow
 
