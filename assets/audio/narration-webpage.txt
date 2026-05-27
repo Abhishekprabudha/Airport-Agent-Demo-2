@@ -1,4 +1,4 @@
-Unified Airport Command Centre. AIonOS opens a live airport intelligence layer across landside, terminal, airside and building systems — powered by SMART connectivity.
+Welcome to AIonOS for Aviation. Meet the AI-native airport intelligence layer that keeps landside, terminal, airside and building systems moving as one — powered by SMART connectivity.
 
 Arrival Surge Predicted Before Congestion Forms. The Passenger Flow Agent detects an inbound surge while car park and transport agents prepare capacity before the queues become visible.
 
