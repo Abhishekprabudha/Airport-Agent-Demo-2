@@ -54,8 +54,7 @@ function renderScene(scene, elapsed) {
     els.section.textContent = scene.section;
     els.headline.textContent = scene.headline;
     els.caption.textContent = scene.caption;
-    const visibleAgents = scene.agents.slice(0, 3);
-    els.agents.innerHTML = visibleAgents.map(a => `<div class="agent">${a}</div>`).join('');
+    els.agents.innerHTML = scene.agents.map(a => `<div class="agent">${a}</div>`).join('');
     els.kpis.innerHTML = Object.entries(scene.kpis).map(([k,v]) => `<div class="kpi"><div class="label">${k}</div><div class="value">${v}</div></div>`).join('');
     lastSceneId = scene.id;
   }
