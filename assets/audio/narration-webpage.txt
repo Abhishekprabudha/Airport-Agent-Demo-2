@@ -26,4 +26,4 @@ The Airport Building Becomes Self-Optimising. AI HVAC, lighting, fire safety, en
 
 Weather Disruption Plans Trigger Automatically. When weather risk rises, AIonOS pre-builds de-icing, gate and crew alternatives to protect network continuity.
 
-One AI-Native Airport Operating System. SMART provides the trusted connectivity fabric. AIonOS provides the intelligence layer. Together they convert airport complexity into coordinated action.
+One AI-Native Airport Operating System. Smart Axiata provides the trusted connectivity fabric. AIonOS provides the intelligence layer. Together they convert airport complexity into coordinated action.

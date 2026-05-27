@@ -16,4 +16,4 @@ On the runway, the FOD and Runway Safety Agent scans camera feeds for debris. It
 
 The airport building itself is also intelligent. AI HVAC pre-cools high-density zones, intelligent lighting balances load, fire and safety AI coordinates emergency response, energy and ESG agents optimise consumption, and vertical transport agents predict lift and escalator failures.
 
-The result is one AI-native airport operating system. SMART provides the trusted connectivity fabric. AIonOS provides the intelligence layer. Together, they turn airport complexity into coordinated, predictive and measurable action.
+The result is one AI-native airport operating system. Smart Axiata provides the trusted connectivity fabric. AIonOS provides the intelligence layer. Together, they turn airport complexity into coordinated, predictive and measurable action.
