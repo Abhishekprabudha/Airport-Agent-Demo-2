@@ -33,12 +33,14 @@ button.ghost { background: rgba(255,255,255,.12); border:1px solid rgba(255,255,
 .spark .line { fill:none; stroke: var(--green); stroke-width: 2.5; }
 .spark .point { fill: var(--green); }
 .spark .bar { fill: rgba(88,242,161,.65); }
+.spark .area-fill { fill: rgba(88,242,161,.22); }
 .spark .slice-a { fill: rgba(88,242,161,.75); }
 .spark .slice-b { fill: rgba(255,209,102,.75); }
 .spark .slice-c { fill: rgba(255,102,0,.75); }
 .spark.queue .line { stroke: var(--amber); }
 .spark.queue .point { fill: var(--amber); }
 .spark.queue .bar { fill: rgba(255,209,102,.75); }
+.spark.queue .area-fill { fill: rgba(255,209,102,.28); }
 .spark .box { fill: rgba(255,255,255,.1); stroke: #fff; }
 .spark .median { stroke: var(--orange); stroke-width: 2; }
 .spark .whisker { stroke: rgba(255,255,255,.85); stroke-width: 1.5; }

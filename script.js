@@ -26,7 +26,28 @@ const els = {
   telemetryFeed: document.getElementById('telemetryFeed'),
   modelDetails: document.getElementById('modelDetails')
 };
-const graphTypes = ['line', 'histogram', 'pie', 'scatter', 'box'];
+const excelChartFamilies = [
+  'column', 'line', 'pie', 'doughnut', 'bar', 'area', 'scatter', 'bubble', 'radar', 'treemap',
+  'sunburst', 'histogram', 'boxwhisker', 'waterfall', 'funnel', 'combo'
+];
+const chartSubtypes = {
+  column: ['clustered', 'stacked'],
+  line: ['markers', 'smoothed'],
+  pie: ['3d', 'pie-of-pie'],
+  doughnut: ['doughnut'],
+  bar: ['clustered', '100%-stacked'],
+  area: ['stacked', '100%-stacked'],
+  scatter: ['markers', 'smooth-lines'],
+  bubble: ['bubble', '3d-bubble'],
+  radar: ['filled', 'markers'],
+  treemap: ['hierarchical'],
+  sunburst: ['ring'],
+  histogram: ['histogram', 'pareto'],
+  boxwhisker: ['distribution'],
+  waterfall: ['bridge'],
+  funnel: ['stage-drop'],
+  combo: ['column-line']
+};
 
 const telemetryProfiles = {
   opening: { metricA: 'Inference Throughput', metricB: 'Queue Pressure', baseA: 42, baseB: 22, feed: ['Control mesh online', 'Data buses synced', 'Narration bootstrapped'] },
@@ -52,12 +73,16 @@ function sceneTelemetry(sceneId) {
   return telemetryProfiles.opening;
 }
 
-function graphTypeForScene(sceneId, offset = 0) {
-  const seed = sceneId.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
-  return graphTypes[(seed + offset) % graphTypes.length];
+function chartTypeForScene(sceneId, offset = 0) {
+  const idx = scenes.findIndex((s) => s.id === sceneId);
+  const safeIdx = idx < 0 ? 0 : idx;
+  const family = excelChartFamilies[(safeIdx + offset) % excelChartFamilies.length];
+  const subtypePool = chartSubtypes[family] || ['standard'];
+  const subtype = subtypePool[safeIdx % subtypePool.length];
+  return `${family}:${subtype}`;
 }
 
-function buildSpark(svg, baseline, variance, t, graphType, isQueue = false) {
+function buildSpark(svg, baseline, variance, t, chartType, isQueue = false) {
   const width = 260;
   const height = 72;
   const points = 26;
@@ -83,11 +108,35 @@ function buildSpark(svg, baseline, variance, t, graphType, isQueue = false) {
     <line class="whisker" x1="25" y1="${y(max)}" x2="235" y2="${y(max)}"></line>
     <rect class="box" x="80" y="${y(q3)}" width="100" height="${Math.max(4, y(q1)-y(q3))}"></rect>
     <line class="median" x1="80" y1="${y(q2)}" x2="180" y2="${y(q2)}"></line>`;
+  const [family] = chartType.split(':');
+  const areaPath = `${path} L ${width} ${height} L 0 ${height} Z`;
+  const radar = `<polygon class="area-fill" points="130,8 200,24 220,52 130,66 40,52 60,24"></polygon>
+    <polygon class="line" points="130,15 188,28 202,50 130,58 58,50 72,28"></polygon>`;
+  const funnel = `<polygon class="bar" points="20,10 240,10 210,24 50,24"></polygon>
+    <polygon class="bar" points="50,28 210,28 190,42 70,42"></polygon>
+    <polygon class="bar" points="70,46 190,46 172,60 88,60"></polygon>`;
+  const waterfall = values.slice(0, 8).map((v, i) => `<rect class="bar" x="${18 + i * 30}" y="${height - (v / 100) * height}" width="20" height="${(v / 100) * height}"></rect>`).join('') +
+    values.slice(0, 7).map((_, i) => `<line class="line" x1="${38 + i * 30}" y1="${height - (values[i] / 100) * height}" x2="${48 + i * 30}" y2="${height - (values[i + 1] / 100) * height}"></line>`).join('');
+  const bubble = values.slice(0, 10).map((v, i) => `<circle class="point" cx="${24 + i * 24}" cy="${height - (v / 100) * height}" r="${3 + (i % 4)}"></circle>`).join('');
+  const treemap = `<rect class="bar" x="6" y="8" width="90" height="24"></rect><rect class="bar" x="98" y="8" width="70" height="24"></rect>
+    <rect class="bar" x="170" y="8" width="84" height="24"></rect><rect class="bar" x="6" y="34" width="124" height="30"></rect>
+    <rect class="bar" x="132" y="34" width="122" height="30"></rect>`;
+  const sunburst = `<g transform="translate(130,36) rotate(${t * 8})"><circle class="slice-a" r="24"></circle><circle fill="#081022" r="14"></circle>
+    <path class="slice-b" d="M0 -24 A24 24 0 0 1 20 12 L12 8 A14 14 0 0 0 0 -14 Z"></path>
+    <path class="slice-c" d="M20 12 A24 24 0 0 1 -12 21 L-7 12 A14 14 0 0 0 12 8 Z"></path></g>`;
   let graphMarkup = `<path class="line" d="${path}"></path>${dots}`;
-  if (graphType === 'histogram') graphMarkup = bars;
-  if (graphType === 'scatter') graphMarkup = scatter;
-  if (graphType === 'pie') graphMarkup = pie;
-  if (graphType === 'box') graphMarkup = box;
+  if (family === 'column' || family === 'histogram' || family === 'bar') graphMarkup = bars;
+  if (family === 'scatter') graphMarkup = scatter;
+  if (family === 'pie') graphMarkup = pie;
+  if (family === 'doughnut' || family === 'sunburst') graphMarkup = sunburst;
+  if (family === 'boxwhisker') graphMarkup = box;
+  if (family === 'area') graphMarkup = `<path class="area-fill" d="${areaPath}"></path><path class="line" d="${path}"></path>`;
+  if (family === 'bubble') graphMarkup = bubble;
+  if (family === 'radar') graphMarkup = radar;
+  if (family === 'waterfall') graphMarkup = waterfall;
+  if (family === 'funnel') graphMarkup = funnel;
+  if (family === 'treemap') graphMarkup = treemap;
+  if (family === 'combo') graphMarkup = `${bars}<path class="line" d="${path}"></path>`;
   svg.innerHTML = `<line class="grid" x1="0" y1="18" x2="260" y2="18"></line>
     <line class="grid" x1="0" y1="36" x2="260" y2="36"></line>
     <line class="grid" x1="0" y1="54" x2="260" y2="54"></line>${graphMarkup}`;
@@ -99,8 +148,8 @@ function renderTelemetry(scene, elapsed) {
   const intra = (elapsed - scene.start) / Math.max(1, scene.end - scene.start);
   document.querySelector('.telemetry-grid .graph-card:first-child .graph-label').textContent = p.metricA;
   document.querySelector('.telemetry-grid .graph-card:last-child .graph-label').textContent = p.metricB;
-  const typeA = graphTypeForScene(scene.id, 0);
-  const typeB = graphTypeForScene(scene.id, 1);
+  const typeA = chartTypeForScene(scene.id, 0);
+  const typeB = chartTypeForScene(scene.id, 7);
   buildSpark(els.throughputGraph, p.baseA + intra * 4, 8, elapsed, typeA, false);
   buildSpark(els.queueGraph, p.baseB - intra * 6, 11, elapsed + 0.8, typeB, true);
   const kpiKeys = Object.keys(scene.kpis);
