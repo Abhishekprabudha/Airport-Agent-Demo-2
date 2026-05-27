@@ -20,8 +20,72 @@ const els = {
   progress: document.getElementById('progress'),
   playBtn: document.getElementById('playBtn'),
   muteBtn: document.getElementById('muteBtn'),
-  resetBtn: document.getElementById('resetBtn')
+  resetBtn: document.getElementById('resetBtn'),
+  throughputGraph: document.getElementById('throughputGraph'),
+  queueGraph: document.getElementById('queueGraph'),
+  telemetryFeed: document.getElementById('telemetryFeed')
 };
+
+const telemetryProfiles = {
+  opening: { throughput: 42, queue: 22, feed: ['Control mesh online', 'Data buses synced', 'Narration bootstrapped'] },
+  landside: { throughput: 68, queue: 78, feed: ['Arrival surge classifier active', 'Curbside dispatch rebalanced', 'Queue diversion issued'] },
+  terminal: { throughput: 72, queue: 58, feed: ['Terminal twin refreshed', 'Asset trilateration locked', 'Mobility SLA safeguarded'] },
+  baggage: { throughput: 76, queue: 64, feed: ['Belt stream correlated', 'Mismatch risk dropped', 'Carousel reassigned'] },
+  boarding: { throughput: 74, queue: 52, feed: ['Boarding groups resequenced', 'Jet-bridge density normal', 'Pushback timeline protected'] },
+  airside: { throughput: 81, queue: 40, feed: ['Turnaround clocks converging', 'GSE dispatch accelerated', 'Safety geofence enforced'] },
+  bms: { throughput: 64, queue: 31, feed: ['HVAC load optimized', 'Lift traffic smoothed', 'Energy envelope stabilized'] },
+  weather: { throughput: 88, queue: 55, feed: ['Weather model confidence rising', 'De-ice slots pre-built', 'Crew swaps validated'] },
+  close: { throughput: 60, queue: 27, feed: ['Executive outcomes compiled', 'Cross-domain risks cleared', 'Run complete'] }
+};
+
+function sceneTelemetry(sceneId) {
+  if (sceneId.startsWith('landside')) return telemetryProfiles.landside;
+  if (sceneId.startsWith('terminal')) return telemetryProfiles.terminal;
+  if (sceneId.startsWith('baggage')) return telemetryProfiles.baggage;
+  if (sceneId.startsWith('boarding')) return telemetryProfiles.boarding;
+  if (sceneId.includes('airside') || sceneId.includes('runway')) return telemetryProfiles.airside;
+  if (sceneId.includes('bms')) return telemetryProfiles.bms;
+  if (sceneId.includes('weather')) return telemetryProfiles.weather;
+  if (sceneId.includes('close')) return telemetryProfiles.close;
+  return telemetryProfiles.opening;
+}
+
+function buildSpark(svg, baseline, variance, t, isQueue = false) {
+  const width = 260;
+  const height = 72;
+  const points = 26;
+  const values = Array.from({ length: points }, (_, i) => {
+    const phase = (i / points) * Math.PI * 2 + t * 0.9;
+    const wobble = Math.sin(phase) * variance + Math.cos(phase * 0.5) * (variance * 0.45);
+    return Math.max(8, Math.min(95, baseline + wobble));
+  });
+  const step = width / (points - 1);
+  const path = values.map((v, i) => `${i === 0 ? 'M' : 'L'} ${i * step} ${height - (v / 100) * height}`).join(' ');
+  const fillPath = `${path} L ${width} ${height} L 0 ${height} Z`;
+  svg.innerHTML = `
+    <line class="grid" x1="0" y1="18" x2="260" y2="18"></line>
+    <line class="grid" x1="0" y1="36" x2="260" y2="36"></line>
+    <line class="grid" x1="0" y1="54" x2="260" y2="54"></line>
+    <path class="fill" d="${fillPath}"></path>
+    <path class="line" d="${path}"></path>
+  `;
+  svg.classList.toggle('queue', isQueue);
+}
+
+function renderTelemetry(scene, elapsed) {
+  const p = sceneTelemetry(scene.id);
+  const intra = (elapsed - scene.start) / Math.max(1, scene.end - scene.start);
+  buildSpark(els.throughputGraph, p.throughput + intra * 4, 8, elapsed, false);
+  buildSpark(els.queueGraph, p.queue - intra * 6, 11, elapsed + 0.8, true);
+  const hh = String(Math.floor(elapsed / 60)).padStart(2, '0');
+  const mm = String(Math.floor(elapsed % 60)).padStart(2, '0');
+  els.telemetryFeed.innerHTML = p.feed.map((line, i) => `
+    <div class="feed-row">
+      <span class="feed-tag">T+${hh}:${mm}.${i + 1}</span>
+      <span class="feed-value">${line}</span>
+    </div>
+  `).join('');
+}
 
 function currentScene(t) { return scenes.find(s => t >= s.start && t < s.end) || scenes[scenes.length - 1]; }
 function speak(text) {
@@ -59,6 +123,7 @@ function renderScene(scene, elapsed) {
     lastSceneId = scene.id;
   }
   els.progress.style.width = `${Math.min(100, elapsed / totalDuration * 100)}%`;
+  renderTelemetry(scene, elapsed);
 }
 function tick(now) {
   if (!startTime) startTime = now;
