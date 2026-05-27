@@ -18,13 +18,11 @@ const els = {
   agents: document.getElementById('agents'),
   kpis: document.getElementById('kpis'),
   progress: document.getElementById('progress'),
-  clock: document.getElementById('clock'),
   playBtn: document.getElementById('playBtn'),
   muteBtn: document.getElementById('muteBtn'),
   resetBtn: document.getElementById('resetBtn')
 };
 
-function fmt(t) { const m = Math.floor(t / 60).toString().padStart(2,'0'); const s = Math.floor(t % 60).toString().padStart(2,'0'); return `${m}:${s}`; }
 function currentScene(t) { return scenes.find(s => t >= s.start && t < s.end) || scenes[scenes.length - 1]; }
 function speak(text) {
   if (!voiceOn || !('speechSynthesis' in window)) return;
@@ -60,7 +58,6 @@ function renderScene(scene, elapsed) {
     els.kpis.innerHTML = Object.entries(scene.kpis).map(([k,v]) => `<div class="kpi"><div class="label">${k}</div><div class="value">${v}</div></div>`).join('');
     lastSceneId = scene.id;
   }
-  els.clock.textContent = fmt(elapsed);
   els.progress.style.width = `${Math.min(100, elapsed / totalDuration * 100)}%`;
 }
 function tick(now) {
@@ -93,7 +90,6 @@ function resetDemo() {
   lastSceneId = null;
   renderScene(scenes[0], 0);
   els.progress.style.width = '0%';
-  els.clock.textContent = '00:00';
   els.playBtn.textContent = '▶ Start narrated demo';
 }
 
