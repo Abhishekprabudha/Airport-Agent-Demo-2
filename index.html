@@ -33,6 +33,21 @@
       <div id="agents" class="agents"></div>
     </aside>
 
+    <aside class="telemetry-panel" aria-live="polite">
+      <div class="panel-title">Live Agent Telemetry</div>
+      <div class="telemetry-grid">
+        <div class="graph-card">
+          <div class="graph-label">Inference Throughput</div>
+          <svg id="throughputGraph" class="spark" viewBox="0 0 260 72" preserveAspectRatio="none"></svg>
+        </div>
+        <div class="graph-card">
+          <div class="graph-label">Queue Pressure</div>
+          <svg id="queueGraph" class="spark" viewBox="0 0 260 72" preserveAspectRatio="none"></svg>
+        </div>
+      </div>
+      <div id="telemetryFeed" class="telemetry-feed"></div>
+    </aside>
+
     <section class="kpi-panel">
       <div id="kpis" class="kpis"></div>
     </section>
