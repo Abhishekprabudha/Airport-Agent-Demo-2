@@ -32,8 +32,19 @@ button.ghost { background: rgba(255,255,255,.12); border:1px solid rgba(255,255,
 .spark .grid { stroke: rgba(255,255,255,.14); stroke-width: 1; }
 .spark .line { fill:none; stroke: var(--green); stroke-width: 2.5; }
 .spark .point { fill: var(--green); }
+.spark .bar { fill: rgba(88,242,161,.65); }
+.spark .slice-a { fill: rgba(88,242,161,.75); }
+.spark .slice-b { fill: rgba(255,209,102,.75); }
+.spark .slice-c { fill: rgba(255,102,0,.75); }
 .spark.queue .line { stroke: var(--amber); }
 .spark.queue .point { fill: var(--amber); }
+.spark.queue .bar { fill: rgba(255,209,102,.75); }
+.spark .box { fill: rgba(255,255,255,.1); stroke: #fff; }
+.spark .median { stroke: var(--orange); stroke-width: 2; }
+.spark .whisker { stroke: rgba(255,255,255,.85); stroke-width: 1.5; }
+.model-details { margin-top: 10px; display:grid; gap:8px; }
+.detail-row { padding: 8px 10px; border-radius: 10px; border:1px solid rgba(255,255,255,.18); font-size:12px; background: rgba(0,0,0,.2); }
+.detail-title { color: var(--orange); font-weight:900; letter-spacing:.06em; text-transform:uppercase; margin-right:8px; }
 .telemetry-feed { margin-top: 10px; display: grid; gap: 7px; max-height: 148px; overflow: hidden; }
 .feed-row { display:flex; align-items:center; justify-content:space-between; gap:8px; padding: 8px 10px; border-radius: 10px; background: transparent; border:1px solid rgba(255,255,255,.18); font-size: 12px; }
 .feed-tag { color: var(--orange); font-weight: 800; letter-spacing: .04em; }
