@@ -16,14 +16,14 @@ body { margin: 0; font-family: Inter, Arial, Helvetica, sans-serif; background: 
 .topbar { position: absolute; top: 28px; left: 36px; right: 36px; display:flex; justify-content:space-between; align-items:flex-start; z-index:3; }
 .eyebrow { color: var(--orange); letter-spacing: .18em; font-size: 13px; font-weight: 800; }
 h1 { margin: 4px 0 0; font-size: 34px; letter-spacing: -.04em; }
-.hero-card { position: absolute; left: 48px; bottom: 132px; width: min(820px, 55vw); z-index:3; padding: 32px 34px; background: linear-gradient(135deg, rgba(8,10,30,.82), rgba(77,20,140,.62)); border: 1px solid rgba(255,255,255,.18); border-radius: 28px; box-shadow: 0 28px 90px rgba(0,0,0,.45); backdrop-filter: blur(10px); }
+.hero-card { position: absolute; left: 48px; bottom: 132px; width: min(820px, 55vw); z-index:3; padding: 32px 34px; background: transparent; border: 1px solid transparent; border-radius: 28px; box-shadow: none; backdrop-filter: none; }
 .section { color: var(--orange); font-weight: 900; text-transform: uppercase; letter-spacing:.12em; font-size: 14px; }
 h2 { margin: 10px 0; font-size: 52px; line-height: .98; letter-spacing: -.06em; }
 p { color: var(--muted); font-size: 22px; line-height: 1.34; margin: 0; }
 .controls { display:flex; gap: 12px; margin-top: 26px; }
 button { border: 0; border-radius: 999px; padding: 13px 18px; font-weight: 900; font-size: 15px; color: white; background: linear-gradient(135deg, var(--orange), #ff8b3d); cursor:pointer; box-shadow: 0 12px 30px rgba(255,102,0,.32); }
 button.ghost { background: rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); box-shadow:none; }
-.agent-panel { position:absolute; top: 128px; right: 36px; width: 420px; z-index:3; background: var(--panel); border:1px solid rgba(255,255,255,.16); border-radius: 24px; padding: 20px; backdrop-filter: blur(12px); transform: translateY(-192px); }
+.agent-panel { position:absolute; top: 128px; right: 36px; width: 420px; z-index:3; background: var(--panel); border:1px solid rgba(255,255,255,.16); border-radius: 24px; padding: 20px; backdrop-filter: blur(12px); transform: translateY(-144px); }
 .panel-title { font-size: 15px; text-transform: uppercase; letter-spacing:.16em; color: var(--muted); font-weight:900; margin-bottom: 14px; }
 .agents { display:flex; flex-direction:column; gap: 10px; }
 .agent { display:flex; align-items:center; gap: 10px; padding: 13px 14px; border-radius: 16px; background: rgba(255,255,255,.09); border:1px solid rgba(255,255,255,.12); font-weight: 800; animation: pop .35s ease both; }
