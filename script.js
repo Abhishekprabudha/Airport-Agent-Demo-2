@@ -27,15 +27,15 @@ const els = {
 };
 
 const telemetryProfiles = {
-  opening: { throughput: 42, queue: 22, feed: ['Control mesh online', 'Data buses synced', 'Narration bootstrapped'] },
-  landside: { throughput: 68, queue: 78, feed: ['Arrival surge classifier active', 'Curbside dispatch rebalanced', 'Queue diversion issued'] },
-  terminal: { throughput: 72, queue: 58, feed: ['Terminal twin refreshed', 'Asset trilateration locked', 'Mobility SLA safeguarded'] },
-  baggage: { throughput: 76, queue: 64, feed: ['Belt stream correlated', 'Mismatch risk dropped', 'Carousel reassigned'] },
-  boarding: { throughput: 74, queue: 52, feed: ['Boarding groups resequenced', 'Jet-bridge density normal', 'Pushback timeline protected'] },
-  airside: { throughput: 81, queue: 40, feed: ['Turnaround clocks converging', 'GSE dispatch accelerated', 'Safety geofence enforced'] },
-  bms: { throughput: 64, queue: 31, feed: ['HVAC load optimized', 'Lift traffic smoothed', 'Energy envelope stabilized'] },
-  weather: { throughput: 88, queue: 55, feed: ['Weather model confidence rising', 'De-ice slots pre-built', 'Crew swaps validated'] },
-  close: { throughput: 60, queue: 27, feed: ['Executive outcomes compiled', 'Cross-domain risks cleared', 'Run complete'] }
+  opening: { metricA: 'Inference Throughput', metricB: 'Queue Pressure', baseA: 42, baseB: 22, feed: ['Control mesh online', 'Data buses synced', 'Narration bootstrapped'] },
+  landside: { metricA: 'Arrival Flow Velocity', metricB: 'Queue Pressure', baseA: 68, baseB: 78, feed: ['Arrival surge classifier active', 'Curbside dispatch rebalanced', 'Queue diversion issued'] },
+  terminal: { metricA: 'Terminal Asset Coverage', metricB: 'Mobility SLA Confidence', baseA: 72, baseB: 58, feed: ['Terminal twin refreshed', 'Asset trilateration locked', 'Mobility SLA safeguarded'] },
+  baggage: { metricA: 'Belt Throughput', metricB: 'Mismatch Risk Index', baseA: 76, baseB: 64, feed: ['Belt stream correlated', 'Mismatch risk dropped', 'Carousel reassigned'] },
+  boarding: { metricA: 'Boarding Cadence', metricB: 'Gate Density Index', baseA: 74, baseB: 52, feed: ['Boarding groups resequenced', 'Jet-bridge density normal', 'Pushback timeline protected'] },
+  airside: { metricA: 'Turnaround Task Completion', metricB: 'Dispatch Latency', baseA: 81, baseB: 40, feed: ['Turnaround clocks converging', 'GSE dispatch accelerated', 'Safety geofence enforced'] },
+  bms: { metricA: 'HVAC Optimisation', metricB: 'Energy Envelope', baseA: 64, baseB: 31, feed: ['HVAC load optimized', 'Lift traffic smoothed', 'Energy envelope stabilized'] },
+  weather: { metricA: 'Forecast Confidence', metricB: 'Recovery Readiness', baseA: 88, baseB: 55, feed: ['Weather model confidence rising', 'De-ice slots pre-built', 'Crew swaps validated'] },
+  close: { metricA: 'Cross-domain Alignment', metricB: 'Risk Clearance', baseA: 60, baseB: 27, feed: ['Executive outcomes compiled', 'Cross-domain risks cleared', 'Run complete'] }
 };
 
 function sceneTelemetry(sceneId) {
@@ -61,13 +61,13 @@ function buildSpark(svg, baseline, variance, t, isQueue = false) {
   });
   const step = width / (points - 1);
   const path = values.map((v, i) => `${i === 0 ? 'M' : 'L'} ${i * step} ${height - (v / 100) * height}`).join(' ');
-  const fillPath = `${path} L ${width} ${height} L 0 ${height} Z`;
+  const dots = values.map((v, i) => `<circle class=\"point\" cx=\"${i * step}\" cy=\"${height - (v / 100) * height}\" r=\"2.1\"></circle>`).join('');
   svg.innerHTML = `
     <line class="grid" x1="0" y1="18" x2="260" y2="18"></line>
     <line class="grid" x1="0" y1="36" x2="260" y2="36"></line>
     <line class="grid" x1="0" y1="54" x2="260" y2="54"></line>
-    <path class="fill" d="${fillPath}"></path>
     <path class="line" d="${path}"></path>
+    ${dots}
   `;
   svg.classList.toggle('queue', isQueue);
 }
@@ -75,8 +75,10 @@ function buildSpark(svg, baseline, variance, t, isQueue = false) {
 function renderTelemetry(scene, elapsed) {
   const p = sceneTelemetry(scene.id);
   const intra = (elapsed - scene.start) / Math.max(1, scene.end - scene.start);
-  buildSpark(els.throughputGraph, p.throughput + intra * 4, 8, elapsed, false);
-  buildSpark(els.queueGraph, p.queue - intra * 6, 11, elapsed + 0.8, true);
+  document.querySelector('.telemetry-grid .graph-card:first-child .graph-label').textContent = p.metricA;
+  document.querySelector('.telemetry-grid .graph-card:last-child .graph-label').textContent = p.metricB;
+  buildSpark(els.throughputGraph, p.baseA + intra * 4, 8, elapsed, false);
+  buildSpark(els.queueGraph, p.baseB - intra * 6, 11, elapsed + 0.8, true);
   const hh = String(Math.floor(elapsed / 60)).padStart(2, '0');
   const mm = String(Math.floor(elapsed % 60)).padStart(2, '0');
   els.telemetryFeed.innerHTML = p.feed.map((line, i) => `
